@@ -1,0 +1,27 @@
+<h1>Lista de Productos</h1>
+<a href="/realtimeproducts">Ver productos en tiempo real</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Categoría</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each products}}
+        <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.title}}</td>
+            <td>{{this.description}}</td>
+            <td>${{this.price}}</td>
+            <td>{{this.stock}}</td>
+            <td>{{this.category}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
