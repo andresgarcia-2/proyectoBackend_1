@@ -3,7 +3,7 @@ const path = require("path");
 
 class FileManager {
     constructor(filePath) {
-        this.filePath = filePath;
+        this.filePath = path.join(__dirname, "../../data", filePath);
     }
 
     async read() {
