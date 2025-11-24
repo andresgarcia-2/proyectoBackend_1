@@ -1,4 +1,4 @@
-const Product = require("../models/product");
+const Product = require("../models/Product");
 const FileManager = require("../utils/FileManager");
 
 const productManager = new FileManager("products.json");

@@ -1,7 +1,7 @@
 const Cart = require("../models/Cart");
 const FileManager = require("../utils/FileManager");
 
-const cartManager = new FileManager("carts.JSON");
+const cartManager = new FileManager("carts.json");
 
 async function createCart() {
     const carts = await cartManager.read();
@@ -27,7 +27,7 @@ async function addProductToCart(cid, pid) {
     const cart = carts[cartIndex];
     const productIndex = cart.products.findIndex(p => p.id === pid);
     if (productIndex === -1) {
-    cart.products.push({ id: pid, quantity: 1 });
+        cart.products.push({ id: pid, quantity: 1 });
     } else {
         cart.products[productIndex].quantity += 1;
     }
