@@ -1,9 +1,9 @@
 const express = require("express");
-const { engine } = requiere("express-handlebars");
+const { engine } = require("express-handlebars");
 const path = require("path");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
-const viewsrRouter = require("./routes/viewsRouter");
+const viewsRouter = require("./routes/viewsRouter");
 
 const app = express();
 

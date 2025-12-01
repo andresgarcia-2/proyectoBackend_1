@@ -1,16 +1,15 @@
-const app = require("/app");
+const app = require("./app");
 const http = require("http");
 const { Server } = require("socket.io");
 const { getProducts } = require("./controllers/productController");
-const { Socket } = require("dgram");
 
 const PORT = 8080;
-const Server = http.createServer(app);
+const server = http.createServer(app);
 const io = new  Server(server);
 
 app.set("io", io);
 
-io.on("connection", async (Socket) => {
+io.on("connection", async (socket) => {
     console.log("Nuevo cliente conectado");
 
     const products = await getProducts();
@@ -37,5 +36,5 @@ io.on("connection", async (Socket) => {
 });
 
 server.listen(PORT, () => {
-    console.log("Server runnitg on http://localhost:{PORT}");
+    console.log("Servidor corriendo en http://localhost:${PORT}");
 });
