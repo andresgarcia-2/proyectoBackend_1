@@ -1,0 +1,107 @@
+<h2>Mi Carrito</h2>
+
+<a href="/products" class="btn" style="margin-bottom: 1rem;">← Seguir Comprando</a>
+
+{{#if cart.products.length}}
+    {{#each cart.products}}
+    <div class="cart-item">
+        <div class="cart-item-info">
+        <h3>{{this.product.title}}</h3>
+        <p>{{this.product.description}}</p>
+        <p><strong>Precio unitario:</strong> ${{this.product.price}}</p>
+        <p><strong>Cantidad:</strong> {{this.quantity}}</p>
+        <p><strong>Subtotal:</strong> ${{multiply this.product.price this.quantity}}</p>
+        </div>
+        <div class="cart-item-actions">
+        <input type="number" id="qty-{{this.product._id}}" value="{{this.quantity}}" min="1" style="width: 80px;">
+        <button onclick="updateQuantity('{{../cart._id}}', '{{this.product._id}}')" class="btn btn-small">Actualizar</button>
+        <button onclick="removeFromCart('{{../cart._id}}', '{{this.product._id}}')" class="btn btn-danger btn-small">Eliminar</button>
+        </div>
+    </div>
+    {{/each}}
+
+    <div class="cart-total">
+    <h3>Total: ${{calculateTotal cart.products}}</h3>
+    <button onclick="clearCart('{{cart._id}}')" class="btn btn-danger" style="margin-top: 1rem;">Vaciar Carrito</button>
+    </div>
+{{else}}
+    <div class="empty-message">
+    <h3>Tu carrito está vacío</h3>
+    <p>Agrega productos desde la tienda.</p>
+    <a href="/products" class="btn">Ir a Productos</a>
+    </div>
+{{/if}}
+
+<script>function updateQuantity(cartId, productId) {
+    const quantity = parseInt(document.getElementById(`qty-${productId}`).value);
+    
+    if (quantity < 1) {
+        alert('La cantidad debe ser al menos 1');
+        return;
+    }
+    
+    fetch(`/api/carts/${cartId}/products/${productId}`, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantity })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+        alert('Cantidad actualizada');
+        location.reload();
+        } else {
+        alert('Error: ' + data.message);
+        }
+    })
+    .catch(err => {
+        alert('Error al actualizar cantidad: ' + err.message);
+    });
+    }
+
+    function removeFromCart(cartId, productId) {
+    if (!confirm('¿Estás seguro de eliminar este producto?')) {
+        return;
+    }
+    
+    fetch(`/api/carts/${cartId}/products/${productId}`, {
+        method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+        alert('Producto eliminado del carrito');
+        location.reload();
+        } else {
+        alert('Error: ' + data.message);
+        }
+    })
+    .catch(err => {
+        alert('Error al eliminar producto: ' + err.message);
+    });
+
+    }
+    function clearCart(cartId) {
+    if (!confirm('¿Estás seguro de vaciar todo el carrito?')) {
+        return;
+    }
+    
+    fetch(`/api/carts/${cartId}`, {
+        method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+        alert('Carrito vaciado');
+        location.reload();
+        } else {
+        alert('Error: ' + data.message);
+        }
+    })
+    .catch(err => {
+        alert('Error al vaciar carrito: ' + err.message);
+    });
+    }
+</script>
