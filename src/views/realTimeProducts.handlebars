@@ -1,7 +1,33 @@
 <h1>Productos en Tiempo Real</h1>
-<a href="/">Volver al inicio</a>
+<a href="/products" class="btn" style="margin-bottom: 1rem;">← Volver a Productos</a>
 
 <h2>Agregar Producto</h2>
+
+<form id="createProductForm">
+    <h3>Agregar Nuevo Producto</h3>
+    
+    <label>Título:</label>
+    <input type="text" id="title" required>
+    
+    <label>Descripción:</label>
+    <textarea id="description" required></textarea>
+    
+    <label>Código:</label>
+    <input type="text" id="code" required>
+    
+    <label>Precio:</label>
+    <input type="number" id="price" step="0.01" required>
+    
+    <label>Stock:</label>
+    <input type="number" id="stock" required>
+    
+    <label>Categoría:</label>
+    <input type="text" id="category" required>
+    
+    <button type="submit" class="btn btn-success">Agregar Producto</button>
+</form>
+
+<!--
 <form id="createProductForm">
     <input type="text" id="title" placeholder="Título" required>
     <input type="text" id="description" placeholder="Descripción" required>
@@ -11,31 +37,33 @@
     <input type="text" id="category" placeholder="Categoría" required>
     <button type="submit">Agregar</button>
 </form>
+-->
 
+<h3 style="margin-top: 2rem;">Productos Actuales</h3>
 <table>
     <thead>
-        <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
-        </tr>
+    <tr>
+        <th>Título</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Categoría</th>
+        <th>Acciones</th>
+    </tr>
     </thead>
     <tbody id="productsList">
-        {{#each products}}
-        <tr>
-            <td>{{this.id}}</td>
-            <td>{{this.title}}</td>
-            <td>{{this.description}}</td>
-            <td>${{this.price}}</td>
-            <td>{{this.stock}}</td>
-            <td>{{this.category}}</td>
-            <td><button onclick="deleteProduct({{this.id}})">Eliminar</button></td>
-        </tr>
-        {{/each}}
+    {{#each products}}
+    <tr>
+        <td>{{this.title}}</td>
+        <td>{{this.description}}</td>
+        <td>${{this.price}}</td>
+        <td>{{this.stock}}</td>
+        <td>{{this.category}}</td>
+        <td>
+        <button onclick="deleteProduct('{{this._id}}')" class="btn btn-danger btn-small">Eliminar</button>
+        </td>
+    </tr>
+    {{/each}}
     </tbody>
 </table>
 
@@ -46,6 +74,7 @@
     socket.on("updateProducts", (products) => {
     const productsList = document.getElementById("productsList");
     productsList.innerHTML = "";
+
     products.forEach(product => {
         productsList.innerHTML += `
             <tr>
@@ -55,8 +84,9 @@
                 <td>$${product.price}</td>
                 <td>${product.stock}</td>
                 <td>${product.category}</td>
-                <td><button 
-                onclick="deleteProduct(${product.id})">Eliminar</button></td>
+                <td>
+                <button onclick="deleteProduct('${product._id}')" class="btn btn-danger btn-small">Eliminar</button>
+                </td>
             </tr>
         `;
     });
@@ -76,10 +106,17 @@ document.getElementById("createProductForm").addEventListener("submit", (e) => {
     };
     socket.emit("createProduct", productData);
     e.target.reset();
+    alert("Producto agregado correctamente");
 });
 
 function deleteProduct(id) {
-    socket.emit('deleteProduct', id);
+    if (confirm("¿Estás seguro de eliminar este producto?")) {
+        socket.emit("deleteProduct", id);
+    }
 }
 
+socket.on('error', (error) => {
+    alert('Error: ' + error.message);
+    });
+    
 </script>
