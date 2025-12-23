@@ -3,7 +3,7 @@ const router = express.Router();
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
 
-router.get("/", async (req, res) => {
+router.get("/products", async (req, res) => {
     try {
         const { limit = 10, page = 1, sort, query } = req.query;
 
@@ -97,12 +97,3 @@ router.get('/', (req, res) => {
 });
 
 module.exports = router;
-
-    /*const products = await getProducts();
-    res.render("home", { products });
-});
-
-router.get("/realtimeproducts", async (req, res) => {
-    const products = await getProducts();
-    res.render("realTimeProducts", { products });
-});*/

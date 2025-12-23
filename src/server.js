@@ -3,7 +3,7 @@ const app = require("./app");
 const http = require("http");
 const { Server } = require("socket.io");
 const connectDB = require("./config/database");
-const Products = require("./models/Product");
+const Product = require("./models/Product");
 
 
 const PORT =process.env.PORT || 8080;
