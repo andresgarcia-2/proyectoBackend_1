@@ -1,0 +1,15 @@
+# Instalación
+
+1. Clonar el repositorio
+2. Instalar dependencias:
+   npm install
+
+3. Crear archivo .env con:
+   MONGODB_URI=tu_connection_string_de_mongodb
+   PORT=8080
+
+4. Ejecutar el servidor:
+   npm start
+
+5. Acceder a:
+   http://localhost:8080/products
