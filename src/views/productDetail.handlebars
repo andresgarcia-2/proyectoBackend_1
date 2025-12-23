@@ -1,0 +1,78 @@
+<a href="/products" class="btn" style="margin-bottom: 1rem;">← Volver a Productos</a>
+
+<div class="product-detail">
+    <span class="category">{{product.category}}</span>
+    <h2>{{product.title}}</h2>
+    
+    <p class="price">${{product.price}}</p>
+    
+    <div class="info">
+    <p><strong>Descripción:</strong></p>
+    <p>{{product.description}}</p>
+    
+    <p><strong>Código:</strong> {{product.code}}</p>
+    <p><strong>Stock disponible:</strong> {{product.stock}} unidades</p>
+    <p><strong>Estado:</strong> {{#if product.status}}Disponible{{else}}No disponible{{/if}}</p>
+    <p><strong>Categoría:</strong> {{product.category}}</p>
+    
+    {{#if product.thumbnails.length}}
+        <p><strong>Imágenes:</strong></p>
+        <ul>
+        {{#each product.thumbnails}}
+            <li>{{this}}</li>
+        {{/each}}
+        </ul>
+    {{/if}}
+    </div>
+    
+    <div style="margin-top: 2rem;">
+    <button onclick="addToCart('{{product._id}}')" class="btn btn-success">Agregar al Carrito</button>
+    </div>
+</div>
+
+<script>
+    function addToCart(productId) {
+    let cartId = localStorage.getItem('cartId');
+    
+    if (!cartId) {
+        fetch('/api/carts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        })
+        .then(res => res.json())
+        .then(data => {
+        cartId = data.payload._id;
+        localStorage.setItem('cartId', cartId);
+        addProductToCart(cartId, productId);
+        })
+        .catch(err => {
+        alert('Error al crear carrito: ' + err.message);
+        });
+    } else {
+        addProductToCart(cartId, productId);
+    }
+    }
+    
+    function addProductToCart(cartId, productId) {
+    fetch(`/api/carts/${cartId}/product/${productId}`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+        alert('Producto agregado al carrito');
+        window.location.href = `/carts/${cartId}`;
+        } else {
+        alert('Error: ' + data.message);
+        }
+    })
+    .catch(err => {
+        alert('Error al agregar producto: ' + err.message);
+    });
+    }
+</script>
